@@ -48,7 +48,7 @@ For live trips, copy `.streamlit/secrets.toml.example` to `.streamlit/secrets.to
 2. In **Settings → Secrets**, paste one line: `GOOGLE_MAPS_API_KEY = "your-key"`. Demo mode works without it.
 3. In Google Cloud, restrict the key to the Routes API, since every visitor's search uses your quota.
 
-Streamlit Cloud uses Python 3.14 by default, and the pinned versions in `requirements.txt` (Streamlit 1.66.1, Altair 6.3.0) work with it. After pushing changes to `routes.py` or `model.py`, use **Manage app → Reboot app** if the app still runs the old version.
+Streamlit Cloud uses Python 3.14 by default, and the pinned versions in `requirements.txt` (Streamlit 1.66.1, Altair 6.3.0) work with it. `app.py` reloads `routes.py` and `model.py` on every run, so pushes take effect without a reboot. If the app ever seems stuck on old code, use **Manage app → Reboot app**.
 
 ## Rebuild the data
 

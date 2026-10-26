@@ -1,4 +1,5 @@
 """AirPeer: how clean is your city's air, and what's the cleanest way to get around it?"""
+import importlib
 import math
 from pathlib import Path
 
@@ -12,6 +13,11 @@ from streamlit_folium import st_folium
 
 import model
 import routes
+
+# Streamlit Cloud reruns app.py on a push but keeps imported modules in memory; reload them so
+# changes to model.py/routes.py take effect without a manual reboot.
+importlib.reload(model)
+importlib.reload(routes)
 
 ROOT = Path(__file__).parent
 MODE_ICONS = {"DRIVE": "🚗", "TRANSIT": "🚆", "BICYCLE": "🚲", "WALK": "🚶"}
