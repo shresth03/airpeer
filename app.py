@@ -370,11 +370,11 @@ with chart_col:
 st.divider()
 st.subheader("Team contributions")
 st.markdown("""
-| Member | Focus | Contribution |
-|---|---|---|
-| **Shresth Prakash** | Problem framing and data thinking | Framed the idea around UN SDG 11: residents can't act on air quality they can't see or compare. Brainstormed what a resident actually needs to know (how bad is it, why, and what can I do today) and decided every number must come from an official source. Chose the WHO, World Bank and UK government datasets and set the honesty rules: show data gaps rather than guess. |
-| **Shreya Jadav** | Diagnosis and policy concept | Came up with comparing each city to cities in similarly wealthy countries, so "is this just poverty, or something local?" has an answer. Worked out the cause categories (traffic, dust, burning, structural) and which real-world fixes match each one, and conceived the letter to the council so the app ends in civic action, not just information. |
-| **Daniel Nwachi** | Trip experience and design | Imagined the trip planner as the everyday hook: show the fastest route next to a greener one and let people choose how much extra time they'd trade. Sketched the Google Maps-style layout, the yearly-savings framing ("3 days a week = X kg CO₂"), and the plain-language, no-jargon tone of the whole page. |
+| Member | Contribution |
+|---|---|
+| **Shresth Prakash** | Came up with the idea of an SDG 11 air-quality app built only on official data. |
+| **Shreya Jadav** | Came up with the idea of comparing cities to income peers and writing to the council. |
+| **Daniel Nwachi** | Came up with the idea of a fastest vs greener trip planner in a Maps-style design. |
 """)
 
 with st.expander("The prompt we started from"):
