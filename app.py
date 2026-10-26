@@ -111,7 +111,10 @@ if pd.notna(city.no2) or pd.notna(city.pm10):
 # ---------- Trip planner ----------
 st.subheader("Plan a cleaner trip")
 demo = st.toggle("Demo mode (use a saved trip, no internet needed)", value=True)
-api_key = st.secrets.get("GOOGLE_MAPS_API_KEY") if (ROOT / ".streamlit" / "secrets.toml").exists() else None
+try:  # local secrets.toml or the Streamlit Cloud secrets panel
+    api_key = st.secrets.get("GOOGLE_MAPS_API_KEY")
+except FileNotFoundError:
+    api_key = None
 tolerance = st.slider("How many extra minutes would you accept compared with driving?", 0, 60, 15, step=5)
 
 if demo:
@@ -129,7 +132,7 @@ else:
         go = st.form_submit_button("Compare ways to get there")
     if go:
         if not api_key:
-            st.error("No Google Maps API key found in .streamlit/secrets.toml. Switch on demo mode instead.")
+            st.error("No Google Maps API key found (.streamlit/secrets.toml locally, or the app's Secrets settings on Streamlit Cloud). Switch on demo mode instead.")
         elif origin and dest:
             with st.spinner("Asking Google Maps for routes…"):
                 st.session_state["trip"] = routes.fetch_all(origin, dest, api_key)
