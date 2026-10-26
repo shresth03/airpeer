@@ -1,5 +1,4 @@
 """AirPeer: how clean is your city's air, and what's the cleanest way to get around it?"""
-import json
 from pathlib import Path
 
 import altair as alt
@@ -14,10 +13,29 @@ import model
 import routes
 
 ROOT = Path(__file__).parent
-MODE_COLORS = {"DRIVE": "#6b7280", "TRANSIT": "#2563eb", "BICYCLE": "#16a34a", "WALK": "#b45309"}
 MODE_ICONS = {"DRIVE": "🚗", "TRANSIT": "🚆", "BICYCLE": "🚲", "WALK": "🚶"}
+# Google Maps-style route colours: blue for the fastest, green for the greener alternative.
+FAST = {"color": "#1a73e8", "casing": "#0b57d0"}
+GREEN = {"color": "#1e8e3e", "casing": "#0d652d"}
 
-st.set_page_config(page_title="AirPeer", page_icon="🌍", layout="centered")
+st.set_page_config(page_title="AirPeer", page_icon="🌍", layout="wide")
+st.markdown("""<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+html, body, [class*="st-"], .stMarkdown, .stCaption { font-family: 'Roboto', sans-serif; }
+.block-container { padding-top: 1.5rem; max-width: 1400px; }
+.ap-panel { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15); padding:4px 0; }
+.ap-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
+.ap-tab { border:1px solid #dadce0; border-radius:18px; padding:6px 12px; font-size:14px; color:#3c4043; background:#fff; }
+.ap-tab.on { background:#e8f0fe; border-color:#e8f0fe; color:#0b57d0; font-weight:500; }
+.ap-tab.off { color:#9aa0a6; }
+.ap-route { border-bottom:1px solid #e8eaed; padding:14px 18px; display:flex; gap:14px; }
+.ap-route:last-child { border-bottom:none; }
+.ap-bar { width:4px; border-radius:2px; flex-shrink:0; }
+.ap-tag { font-size:12px; font-weight:500; letter-spacing:.3px; text-transform:uppercase; }
+.ap-time { font-size:22px; font-weight:500; color:#202124; }
+.ap-sub { font-size:14px; color:#5f6368; margin-top:2px; }
+.ap-co2 { font-size:14px; color:#202124; margin-top:4px; }
+</style>""", unsafe_allow_html=True)
 
 
 @st.cache_data
@@ -41,167 +59,197 @@ def badge(pm25):
     return "#b91c1c", "🔴 Far above the WHO limit"
 
 
+def route_card(o, tag, tag_color, detail):
+    """One Google Maps-style route row. Joined on one line so Markdown never shows the HTML as code."""
+    return "".join([
+        f'<div class="ap-route"><div class="ap-bar" style="background:{tag_color}"></div><div style="flex:1">',
+        f'<div class="ap-tag" style="color:{tag_color}">{tag}</div>',
+        f'<div style="display:flex;justify-content:space-between;align-items:baseline">',
+        f'<span style="font-size:16px;color:#202124">{MODE_ICONS[o["mode"]]} {o["label"]}</span>',
+        f'<span class="ap-time">{o["minutes"]:.0f} min</span></div>',
+        f'<div class="ap-sub">{o["km"]:.1f} km{" · " + ", ".join(o["lines"]) if o["lines"] else ""}</div>',
+        f'<div class="ap-co2">{detail}</div></div></div>',
+    ])
+
+
+def add_route(fmap, path, style, label):
+    """Draw a route Google-style (dark casing under a bright line) with a time bubble at its midpoint."""
+    folium.PolyLine(path, color=style["casing"], weight=10, opacity=0.9).add_to(fmap)
+    folium.PolyLine(path, color=style["color"], weight=6, opacity=1, tooltip=label).add_to(fmap)
+    mid = path[len(path) // 2]
+    folium.Marker(mid, icon=folium.DivIcon(icon_size=(150, 30), icon_anchor=(0, 15), html=(
+        f'<div style="display:inline-block;background:{style["color"]};color:#fff;font:500 13px Roboto,sans-serif;'
+        f'padding:4px 9px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.35);white-space:nowrap">{label}</div>'
+    ))).add_to(fmap)
+
+
 # ---------- Header ----------
 st.title("🌍 AirPeer")
 st.write("See how clean your city's air is, why, and the cleanest way to make your trip. "
          "Part of UN Sustainable Development Goal 11: sustainable cities and communities.")
 
-# ---------- City search ----------
-query = st.text_input("Your city", value="Delhi", placeholder="Start typing a city, e.g. Stockholm")
-matches = process.extract(query, cities["label"], scorer=fuzz.WRatio, limit=8) if query else []
-if not matches:
-    st.info("Type a city name to begin.")
-    st.stop()
-choice = st.selectbox("Pick the closest match", [m[0] for m in matches])
-city = cities[cities["label"] == choice].iloc[0]
+left, right = st.columns([1, 1.2], gap="large")
 
-# ---------- Score card ----------
-mult = model.who_multiple(city.pm25)
-color, verdict = badge(city.pm25)
-met = model.interim_target(city.pm25)
-stations = f"{int(city.stations)} monitoring stations" if pd.notna(city.stations) else "station count not reported"
-st.markdown(
-    f"""<div style="border:1px solid #e5e7eb;border-left:8px solid {color};border-radius:12px;padding:20px 24px;margin:8px 0 16px">
-    <div style="font-size:15px;color:#6b7280">Fine-particle pollution (PM2.5) in {city.city}</div>
-    <div style="font-size:56px;font-weight:700;line-height:1.1;color:{color}">{mult:.1f}× the WHO limit</div>
-    <div style="font-size:17px;margin-top:6px"><b>{verdict}</b> · {city.pm25:.1f} µg/m³ vs the WHO limit of 5 µg/m³</div>
-    <div style="font-size:14px;color:#6b7280;margin-top:6px">Measured in {city.year} · {stations}</div>
-    </div>""", unsafe_allow_html=True)
-if met:
-    st.caption(f"WHO step reached: **{met[1]}** ({met[0]} µg/m³ or less)."
-               + ("" if met[0] == 5 else " The WHO sets stepping-stone targets of 35, 25, 15, 10 and finally 5."))
-else:
-    st.caption("This city has not yet reached even the first WHO stepping-stone target (35 µg/m³).")
+# ---------- City search + score card ----------
+with left:
+    query = st.text_input("Your city", value="Delhi", placeholder="Start typing a city, e.g. Stockholm")
+    matches = process.extract(query, cities["label"], scorer=fuzz.WRatio, limit=8) if query else []
+    if not matches:
+        st.info("Type a city name to begin.")
+        st.stop()
+    choice = st.selectbox("Pick the closest match", [m[0] for m in matches])
+    city = cities[cities["label"] == choice].iloc[0]
+
+    mult = model.who_multiple(city.pm25)
+    color, verdict = badge(city.pm25)
+    met = model.interim_target(city.pm25)
+    stations = f"{int(city.stations)} monitoring stations" if pd.notna(city.stations) else "station count not reported"
+    st.markdown(
+        f"""<div style="border:1px solid #e5e7eb;border-left:8px solid {color};border-radius:12px;padding:20px 24px;margin:8px 0 16px">
+        <div style="font-size:15px;color:#6b7280">Fine-particle pollution (PM2.5) in {city.city}</div>
+        <div style="font-size:52px;font-weight:700;line-height:1.1;color:{color}">{mult:.1f}× the WHO limit</div>
+        <div style="font-size:17px;margin-top:6px"><b>{verdict}</b> · {city.pm25:.1f} µg/m³ vs the WHO limit of 5 µg/m³</div>
+        <div style="font-size:14px;color:#6b7280;margin-top:6px">Measured in {city.year} · {stations}</div>
+        </div>""", unsafe_allow_html=True)
+    if met:
+        st.caption(f"WHO step reached: **{met[1]}** ({met[0]} µg/m³ or less)."
+                   + ("" if met[0] == 5 else " The WHO sets stepping-stone targets of 35, 25, 15, 10 and finally 5."))
+    else:
+        st.caption("This city has not yet reached even the first WHO stepping-stone target (35 µg/m³).")
 
 # ---------- Peer comparison ----------
-st.subheader("Is it worse than similar cities?")
 causes = model.likely_causes(city, rules)
 diagnosis = model.peer_diagnosis(city.ratio)
-if diagnosis:
-    bars = pd.DataFrame({
-        "what": [f"{city.city} (measured)", "Typical for a country this wealthy", "WHO limit"],
-        "pm25": [city.pm25, city.expected_pm25, 5.0],
-        "kind": ["city", "peer", "who"],
-    })
-    chart = alt.Chart(bars).mark_bar(cornerRadiusEnd=4).encode(
-        x=alt.X("pm25:Q", title="PM2.5 (µg/m³)", axis=alt.Axis(grid=False)),
-        y=alt.Y("what:N", sort=None, title=None, axis=alt.Axis(labelLimit=260)),
-        color=alt.Color("kind:N", scale=alt.Scale(domain=["city", "peer", "who"],
-                                                  range=[color, "#9ca3af", "#15803d"]), legend=None),
-        tooltip=[alt.Tooltip("what:N", title=""), alt.Tooltip("pm25:Q", title="µg/m³", format=".1f")],
-    )
-    text = chart.mark_text(align="left", dx=6).encode(text=alt.Text("pm25:Q", format=".1f"),
-                                                      color=alt.value("#374151"))
-    st.altair_chart((chart + text).properties(height=alt.Step(34)), width="stretch")
-    st.markdown(f"**{diagnosis}**  \n{city.city} has **{city.ratio:.1f}×** the pollution we'd expect "
-                f"for a country with {city.country}'s income (GDP per person ${city.gdp_pcap_ppp:,.0f}, {int(city.gdp_year)}).")
-    st.caption(f"Expected level comes from comparing {stats['n']:,} cities' pollution with their country's "
-               f"income; income explains {stats['r2']:.0%} of the differences between cities (R² = {stats['r2']:.2f}).")
-else:
-    st.warning(f"The World Bank has no income figure for {city.country}, so we can only compare with the WHO limit.")
+with right:
+    st.subheader("Is it worse than similar cities?")
+    if diagnosis:
+        bars = pd.DataFrame({
+            "what": [f"{city.city} (measured)", "Typical for a country this wealthy", "WHO limit"],
+            "pm25": [city.pm25, city.expected_pm25, 5.0],
+            "kind": ["city", "peer", "who"],
+        })
+        chart = alt.Chart(bars).mark_bar(cornerRadiusEnd=4).encode(
+            x=alt.X("pm25:Q", title="PM2.5 (µg/m³)", axis=alt.Axis(grid=False)),
+            y=alt.Y("what:N", sort=None, title=None, axis=alt.Axis(labelLimit=260)),
+            color=alt.Color("kind:N", scale=alt.Scale(domain=["city", "peer", "who"],
+                                                      range=[color, "#9ca3af", "#15803d"]), legend=None),
+            tooltip=[alt.Tooltip("what:N", title=""), alt.Tooltip("pm25:Q", title="µg/m³", format=".1f")],
+        )
+        text = chart.mark_text(align="left", dx=6).encode(text=alt.Text("pm25:Q", format=".1f"),
+                                                          color=alt.value("#374151"))
+        st.altair_chart((chart + text).properties(height=alt.Step(34)), width="stretch")
+        st.markdown(f"**{diagnosis}**  \n{city.city} has **{city.ratio:.1f}×** the pollution we'd expect "
+                    f"for a country with {city.country}'s income (GDP per person ${city.gdp_pcap_ppp:,.0f}, {int(city.gdp_year)}).")
+        st.caption(f"Expected level comes from comparing {stats['n']:,} cities' pollution with their country's "
+                   f"income; income explains {stats['r2']:.0%} of the differences between cities (R² = {stats['r2']:.2f}).")
+    else:
+        st.warning(f"The World Bank has no income figure for {city.country}, so we can only compare with the WHO limit.")
 
-st.markdown("**Likely cause**")
-for c in causes:
-    st.markdown(f"- **{c['label']}**: {c['explain']}  \n  What helps: {'; '.join(c['actions'])}. "
-                f"[Source]({rules['sources'][c['source']]})")
-if pd.notna(city.no2) or pd.notna(city.pm10):
-    st.caption(f"Other readings in {city.year}: NO2 {city.no2 if pd.notna(city.no2) else 'not measured'} µg/m³ · "
-               f"PM10 {city.pm10 if pd.notna(city.pm10) else 'not measured'} µg/m³.")
+    st.markdown("**Likely cause**")
+    for c in causes:
+        st.markdown(f"- **{c['label']}**: {c['explain']}  \n  What helps: {'; '.join(c['actions'])}. "
+                    f"[Source]({rules['sources'][c['source']]})")
+    if pd.notna(city.no2) or pd.notna(city.pm10):
+        st.caption(f"Other readings in {city.year}: NO2 {city.no2 if pd.notna(city.no2) else 'not measured'} µg/m³ · "
+                   f"PM10 {city.pm10 if pd.notna(city.pm10) else 'not measured'} µg/m³.")
 
-# ---------- Trip planner ----------
+# ---------- Trip planner (Maps-style: panel on the left, map on the right) ----------
+st.divider()
 st.subheader("Plan a cleaner trip")
-demo = st.toggle("Demo mode (use a saved trip, no internet needed)", value=True)
 try:  # local secrets.toml or the Streamlit Cloud secrets panel
     api_key = st.secrets.get("GOOGLE_MAPS_API_KEY")
 except FileNotFoundError:
     api_key = None
-tolerance = st.slider("How many extra minutes would you accept compared with driving?", 0, 60, 15, step=5)
 
-if demo:
-    if routes.DEMO_FILE.exists():
-        raw = routes.load_demo()
-        st.caption(f"Saved trip: {raw['origin']} → {raw['destination']}")
+panel, map_col = st.columns([1, 1.8], gap="medium")
+with panel:
+    demo = st.toggle("Demo mode (use a saved trip, no internet needed)", value=True)
+    if demo:
+        raw = routes.load_demo() if routes.DEMO_FILE.exists() else None
+        if raw:
+            st.text_input("🟢 From", raw["origin"], disabled=True)
+            st.text_input("📍 To", raw["destination"], disabled=True)
+        else:
+            st.warning("No saved demo trip yet. Add a Google Maps API key and run `python routes.py` to save one.")
     else:
-        raw = None
-        st.warning("No saved demo trip yet. Add a Google Maps API key and run `python routes.py` to save one.")
-else:
-    with st.form("trip_form"):
-        c1, c2 = st.columns(2)
-        origin = c1.text_input("From", placeholder=f"e.g. a station in {city.city}")
-        dest = c2.text_input("To", placeholder="e.g. your workplace")
-        go = st.form_submit_button("Compare ways to get there")
-    if go:
-        if not api_key:
-            st.error("No Google Maps API key found (.streamlit/secrets.toml locally, or the app's Secrets settings on Streamlit Cloud). Switch on demo mode instead.")
-        elif origin and dest:
-            with st.spinner("Asking Google Maps for routes…"):
-                st.session_state["trip"] = routes.fetch_all(origin, dest, api_key)
-    raw = st.session_state.get("trip")
+        with st.form("trip_form", border=False):
+            origin = st.text_input("🟢 From", placeholder=f"Choose a starting point in {city.city}")
+            dest = st.text_input("📍 To", placeholder="Choose a destination")
+            go = st.form_submit_button("Get routes", type="primary", width="stretch")
+        if go:
+            if not api_key:
+                st.error("No Google Maps API key found (.streamlit/secrets.toml locally, or the app's Secrets "
+                         "settings on Streamlit Cloud). Switch on demo mode instead.")
+            elif origin and dest:
+                with st.spinner("Asking Google Maps for routes…"):
+                    st.session_state["trip"] = routes.fetch_all(origin, dest, api_key)
+        raw = st.session_state.get("trip")
+    tolerance = st.slider("Extra minutes you'd accept for a greener trip", 0, 60, 15, step=5)
 
-if raw:
-    options = routes.summarise(raw, factors)
-    best = routes.recommend(options, tolerance)
-    errors = [o for o in options if not o["available"]]
-    avail = [o for o in options if o["available"]]
-    if not avail:
+options = routes.summarise(raw, factors) if raw else []
+fastest, alternative, within = routes.fastest_and_alternative(options, tolerance)
+
+with panel:
+    if raw and not fastest:
         st.error("Google Maps found no route for any mode. Check the addresses.")
+    elif fastest:
+        shown = {fastest["mode"], alternative["mode"] if alternative else None}
+        st.markdown('<div class="ap-tabs">' + "".join(
+            f'<span class="ap-tab {"on" if o["mode"] in shown else ""}">{MODE_ICONS[o["mode"]]} {o["minutes"]:.0f} min</span>'
+            if o["available"] else f'<span class="ap-tab off">{MODE_ICONS[o["mode"]]} n/a</span>'
+            for o in options) + "</div>", unsafe_allow_html=True)
+
+        cards = [route_card(fastest, "Fastest", FAST["color"], f'{fastest["kg_co2"]:.2f} kg CO₂')]
+        if alternative:
+            extra = alternative["minutes"] - fastest["minutes"]
+            saved = fastest["kg_co2"] - alternative["kg_co2"]
+            tag = "Best alternative · greener" if within else f"Greenest option · over your {tolerance}-min limit"
+            cards.append(route_card(alternative, tag, GREEN["color"],
+                                    f'{alternative["kg_co2"]:.2f} kg CO₂ · <b>{saved:.2f} kg less</b> · {extra:+.0f} min'))
+        st.markdown('<div class="ap-panel">' + "".join(cards) + "</div>", unsafe_allow_html=True)
+
+        if not alternative:
+            st.success(f"{fastest['label']} is already the fastest and the cleanest option.")
+        else:
+            saving = routes.yearly_saving_kg(fastest, alternative)
+            if within:
+                st.success(f"🌱 Going by {alternative['label'].lower()} there and back **3 days a week saves about "
+                           f"{saving:,.0f} kg CO₂ a year**.")
+            else:
+                st.info(f"No greener option is within {tolerance} extra minutes. Allow more minutes to get "
+                        f"{alternative['label'].lower()} recommended (saves about {saving:,.0f} kg CO₂ a year).")
+        missing = [o["label"] for o in options if not o["available"]]
+        if missing:
+            st.caption("Not available for this trip: " + ", ".join(missing) + ".")
+
+with map_col:
+    shown_routes = [(o, s, t) for o, s, t in [(alternative, GREEN, "greener"), (fastest, FAST, "fastest")]
+                    if o and o.get("polyline")]
+    if shown_routes:
+        paths = [polyline.decode(o["polyline"]) for o, _, _ in shown_routes]
+        pts = [p for path in paths for p in path]
+        fmap = folium.Map(tiles="OpenStreetMap", scrollWheelZoom=False, zoom_control=True)  # page scrolling must not zoom the map
+        # Alternative drawn first so the fastest (blue) sits on top where they overlap, as in Google Maps.
+        for (o, style, _), path in zip(shown_routes, paths):
+            add_route(fmap, path, style, f"{MODE_ICONS[o['mode']]} {o['minutes']:.0f} min · {o['kg_co2']:.2f} kg CO₂")
+        folium.CircleMarker(paths[-1][0], radius=7, color="#202124",
+                            weight=3, fill=True, fill_color="#fff", fill_opacity=1, tooltip="Start").add_to(fmap)
+        folium.Marker(paths[-1][-1], tooltip="Destination", icon=folium.Icon(color="red", icon="map-marker",
+                                                                             prefix="fa")).add_to(fmap)
+        fmap.fit_bounds([[min(p[0] for p in pts), min(p[1] for p in pts)],
+                         [max(p[0] for p in pts), max(p[1] for p in pts)]], padding=(30, 30))
+        st_folium(fmap, height=560, use_container_width=True, returned_objects=[],
+                  key=f"map_{raw['origin']}_{raw['destination']}_{tolerance}")
     else:
-        cols = st.columns(len(avail))
-        for col, o in zip(cols, avail):
-            is_best = best and o["mode"] == best["mode"]
-            border = "#15803d" if is_best else "#e5e7eb"
-            # Joined on one line: blank or indented lines would make Markdown show the HTML as code.
-            tag = ('<div style="color:#15803d;font-size:13px;font-weight:600">Recommended</div>'
-                   if is_best else '<div style="font-size:13px">&nbsp;</div>')
-            col.markdown("".join([
-                f'<div style="border:2px solid {border};border-radius:12px;padding:12px;text-align:center">',
-                f'<div style="font-size:26px">{MODE_ICONS[o["mode"]]}</div><b>{o["label"]}</b>{tag}',
-                f'<div style="font-size:14px;margin-top:6px">{o["minutes"]:.0f} min · {o["km"]:.1f} km</div>',
-                f'<div style="font-size:18px;font-weight:600">{o["kg_co2"]:.2f} kg CO₂</div></div>',
-            ]), unsafe_allow_html=True)
-        for o in errors:
-            st.caption(f"{MODE_ICONS[o['mode']]} {o['label']}: not available for this trip.")
-
-        drive = next((o for o in avail if o["mode"] == "DRIVE"), None)
-        if best:
-            extra = best["minutes"] - drive["minutes"] if drive else 0
-            msg = f"**Go by {best['label'].lower()}**"
-            if drive and best["mode"] != "DRIVE":
-                msg += f": {extra:+.0f} min compared with driving, {drive['kg_co2'] - best['kg_co2']:.2f} kg less CO₂."
-            elif best["mode"] == "DRIVE":
-                msg = "**Driving is the only option within your time limit.** Try allowing more extra minutes."
-            st.success(msg)
-            if best["lines"]:
-                st.caption("Transit lines: " + ", ".join(best["lines"]))
-            saving = routes.yearly_saving_kg(options, best)
-            if saving and saving > 0:
-                st.markdown(f"🌱 Doing this trip there and back **3 days a week saves about {saving:,.0f} kg CO₂ a year**.")
-
-        # Map with every route; recommended one drawn thicker.
-        paths = {o["mode"]: polyline.decode(o["polyline"]) for o in avail if o.get("polyline")}
-        if paths:
-            pts = [p for path in paths.values() for p in path]
-            fmap = folium.Map(tiles="OpenStreetMap", scrollWheelZoom=False)  # page scrolling must not zoom the map
-            for o in avail:
-                if o["mode"] in paths:
-                    is_best = best and o["mode"] == best["mode"]
-                    folium.PolyLine(paths[o["mode"]], color=MODE_COLORS[o["mode"]], weight=7 if is_best else 3,
-                                    opacity=0.9 if is_best else 0.6,
-                                    tooltip=f"{o['label']}: {o['minutes']:.0f} min, {o['kg_co2']:.2f} kg CO₂").add_to(fmap)
-            folium.Marker(pts[0], tooltip="Start", icon=folium.Icon(color="green")).add_to(fmap)
-            folium.Marker(pts[-1], tooltip="End", icon=folium.Icon(color="red")).add_to(fmap)
-            fmap.fit_bounds([[min(p[0] for p in pts), min(p[1] for p in pts)],
-                             [max(p[0] for p in pts), max(p[1] for p in pts)]])
-            st_folium(fmap, height=380, use_container_width=True, returned_objects=[],
-                      key=f"map_{raw['origin']}_{raw['destination']}")
-            st.caption("  ".join(f"<span style='color:{MODE_COLORS[m]}'>━━</span> {routes.MODES[m]}"
-                                 for m in paths), unsafe_allow_html=True)
-        st.caption(f"CO₂ uses UK government 2025 factors: car {factors['car']['kg_co2e_per_km']} kg per km "
-                   f"(one person driving alone), bus {factors['bus']['kg_co2e_per_km']}, metro "
-                   f"{factors['metro']['kg_co2e_per_km']}, rail {factors['rail']['kg_co2e_per_km']} kg per passenger-km. "
-                   "Cycling and walking count as zero.")
+        fmap = folium.Map(location=[20, 0], zoom_start=2, tiles="OpenStreetMap", scrollWheelZoom=False)
+        st_folium(fmap, height=560, use_container_width=True, returned_objects=[], key="map_empty")
+    st.caption(f"CO₂ uses UK government 2025 factors: car {factors['car']['kg_co2e_per_km']} kg per km "
+               f"(one person driving alone), bus {factors['bus']['kg_co2e_per_km']}, metro "
+               f"{factors['metro']['kg_co2e_per_km']}, rail {factors['rail']['kg_co2e_per_km']} kg per passenger-km. "
+               "Cycling and walking count as zero.")
 
 # ---------- Council letter ----------
+st.divider()
 st.subheader("Write to your council")
 if st.button("✉️ Draft my letter"):
     main = causes[0]
