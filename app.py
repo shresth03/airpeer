@@ -5,6 +5,7 @@ from pathlib import Path
 
 import altair as alt
 import folium
+import numpy as np
 import pandas as pd
 import polyline
 import streamlit as st
@@ -317,15 +318,63 @@ st.caption(
     "averages applied to every country. Routes are not ranked by street-level air quality (that needs a paid API)."
 )
 
+# ---------- How the model works ----------
+st.divider()
+st.subheader("How the model works")
+st.markdown(
+    "Richer countries usually have cleaner air, so comparing a city only with the WHO limit isn't the whole story. "
+    "The model asks a fairer question: **is this city's air worse than we'd expect for a country this wealthy?**"
+)
+steps, chart_col = st.columns([1, 1.4], gap="large")
+with steps:
+    st.markdown(f"""
+1. **Collect the data.** For each of {stats['n']:,} cities we take the latest yearly PM2.5 from the WHO database and the country's GDP per person (PPP) from the World Bank for the same year.
+2. **Draw the line.** We fit one straight line through all cities, using log scales for both, so each step on the line is a percentage change. Income explains **{stats['r2']:.0%}** of the differences between cities (R² = {stats['r2']:.2f}).
+3. **Read off the expected level.** For a city, the line gives the PM2.5 typical for its country's income: expected = e^({stats['intercept']:.2f} − {abs(stats['slope']):.2f} × ln(GDP per person)). In plain terms, each 1% richer goes with about {abs(stats['slope']):.2f}% cleaner air.
+4. **Compare.** Measured ÷ expected gives the ratio. Above **{model.WORSE_THAN_PEERS}** means "worse than income peers: local causes likely". Otherwise, national, structural causes such as energy and industry matter most.
+5. **Suggest a cause.** Simple rules check the other pollutants: high NO2 points to traffic, PM10 at least twice PM2.5 points to dust, and high PM2.5 with low NO2 points to burning. If NO2 or PM10 wasn't measured, we say the cause is unclear rather than guess.
+""")
+    if diagnosis:
+        st.info(f"**{city.city}:** GDP per person ${city.gdp_pcap_ppp:,.0f} gives an expected "
+                f"{city.expected_pm25:.1f} µg/m³. Measured {city.pm25:.1f} ÷ expected {city.expected_pm25:.1f} = "
+                f"**{city.ratio:.2f}**, so {'worse than' if city.ratio > model.WORSE_THAN_PEERS else 'in line with'} "
+                "its income peers.")
+with chart_col:
+    pts = cities.dropna(subset=["gdp_pcap_ppp"])[["label", "gdp_pcap_ppp", "pm25"]]
+    gdp_grid = np.geomspace(pts["gdp_pcap_ppp"].min(), pts["gdp_pcap_ppp"].max(), 50)
+    line = pd.DataFrame({"gdp_pcap_ppp": gdp_grid,
+                         "pm25": np.exp(stats["intercept"] + stats["slope"] * np.log(gdp_grid))})
+    x = alt.X("gdp_pcap_ppp:Q", title="GDP per person, PPP ($, log scale)",
+              scale=alt.Scale(type="log", domain=[gdp_grid[0], gdp_grid[-1]], nice=False),
+              axis=alt.Axis(grid=False, format="$,.0f", values=[1000, 3000, 10000, 30000, 100000]))
+    y = alt.Y("pm25:Q", title="PM2.5 (µg/m³, log scale)",
+              scale=alt.Scale(type="log", domain=[max(pts["pm25"].min(), 0.5), pts["pm25"].max()], nice=False),
+              axis=alt.Axis(grid=True, gridColor="#eef0f2", values=[1, 3, 10, 30, 100, 300]))
+    dots = alt.Chart(pts).mark_circle(size=14, opacity=0.35, color="#9ca3af").encode(
+        x=x, y=y, tooltip=[alt.Tooltip("label:N", title="City"),
+                           alt.Tooltip("gdp_pcap_ppp:Q", title="GDP per person", format="$,.0f"),
+                           alt.Tooltip("pm25:Q", title="PM2.5", format=".1f")])
+    fit = alt.Chart(line).mark_line(color="#1a73e8", strokeWidth=2, clip=True).encode(x=x, y=y)
+    layers = [dots, fit]
+    if diagnosis:
+        me = pd.DataFrame({"gdp_pcap_ppp": [city.gdp_pcap_ppp], "pm25": [city.pm25], "label": [city.city]})
+        layers += [alt.Chart(me).mark_circle(size=120, color=color, stroke="#fff", strokeWidth=2).encode(x=x, y=y),
+                   alt.Chart(me).mark_text(dx=10, align="left", fontWeight="bold", color="#202124").encode(
+                       x=x, y=y, text="label:N")]
+    st.altair_chart(alt.layer(*layers).properties(height=360), width="stretch")
+    st.caption(f"Each grey dot is a city. The blue line is the expected level for each income. "
+               f"Cities above the line are more polluted than their income suggests"
+               f"{'; ' + city.city + ' is highlighted' if diagnosis else ''}.")
+
 # ---------- How we built it ----------
 st.divider()
 st.subheader("Team contributions")
 st.markdown("""
-| Member | Part of the app | What they did |
+| Member | Focus | Contribution |
 |---|---|---|
-| **Shresth Prakash** | Data and deployment | Downloaded the WHO, World Bank and UK conversion-factor datasets; wrote `prep.py` to build the clean city and emission-factor files; set up GitHub and Streamlit Cloud. |
-| **Shreya Jadav** | Model and diagnosis | Wrote `model.py` (income-peer regression, WHO limit multiple and interim targets) and `rules.json` (likely-cause rules with WHO sources); wrote the council letter. |
-| **Daniel Nwachi** | Trips and front end | Wrote `routes.py` (Google Routes API, route alternatives, CO₂ per route, fastest vs best alternative); built the Maps-style trip planner and page layout in `app.py`. |
+| **Shresth Prakash** | Problem framing and data thinking | Framed the idea around UN SDG 11: residents can't act on air quality they can't see or compare. Brainstormed what a resident actually needs to know (how bad is it, why, and what can I do today) and decided every number must come from an official source. Chose the WHO, World Bank and UK government datasets and set the honesty rules: show data gaps rather than guess. |
+| **Shreya Jadav** | Diagnosis and policy concept | Came up with comparing each city to cities in similarly wealthy countries, so "is this just poverty, or something local?" has an answer. Worked out the cause categories (traffic, dust, burning, structural) and which real-world fixes match each one, and conceived the letter to the council so the app ends in civic action, not just information. |
+| **Daniel Nwachi** | Trip experience and design | Imagined the trip planner as the everyday hook: show the fastest route next to a greener one and let people choose how much extra time they'd trade. Sketched the Google Maps-style layout, the yearly-savings framing ("3 days a week = X kg CO₂"), and the plain-language, no-jargon tone of the whole page. |
 """)
 
 with st.expander("The prompt we started from"):

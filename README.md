@@ -67,11 +67,23 @@ To rebuild the clean data, first download the WHO Excel into `data/raw/` (link a
 
 ## Team contributions
 
-| Member | Part of the app | What they did |
+| Member | Focus | Contribution |
 |---|---|---|
-| **Shresth Prakash** | Data and deployment | Downloaded the WHO, World Bank and UK conversion-factor datasets; wrote `prep.py` to build the clean city and emission-factor files; set up GitHub and Streamlit Cloud. |
-| **Shreya Jadav** | Model and diagnosis | Wrote `model.py` (income-peer regression, WHO limit multiple and interim targets) and `rules.json` (likely-cause rules with WHO sources); wrote the council letter. |
-| **Daniel Nwachi** | Trips and front end | Wrote `routes.py` (Google Routes API, route alternatives, CO₂ per route, fastest vs best alternative); built the Maps-style trip planner and page layout in `app.py`. |
+| **Shresth Prakash** | Problem framing and data thinking | Framed the idea around UN SDG 11: residents can't act on air quality they can't see or compare. Brainstormed what a resident actually needs to know (how bad is it, why, and what can I do today) and decided every number must come from an official source. Chose the WHO, World Bank and UK government datasets and set the honesty rules: show data gaps rather than guess. |
+| **Shreya Jadav** | Diagnosis and policy concept | Came up with comparing each city to cities in similarly wealthy countries, so "is this just poverty, or something local?" has an answer. Worked out the cause categories (traffic, dust, burning, structural) and which real-world fixes match each one, and conceived the letter to the council so the app ends in civic action, not just information. |
+| **Daniel Nwachi** | Trip experience and design | Imagined the trip planner as the everyday hook: show the fastest route next to a greener one and let people choose how much extra time they'd trade. Sketched the Google Maps-style layout, the yearly-savings framing ("3 days a week = X kg CO₂"), and the plain-language, no-jargon tone of the whole page. |
+
+## How the model works
+
+Richer countries usually have cleaner air, so the model asks: is this city's air worse than we'd expect for a country this wealthy?
+
+1. **Collect the data.** For each of 4,027 cities, take the latest yearly PM2.5 (WHO) and the country's GDP per person, PPP (World Bank), for the same year.
+2. **Draw the line.** Fit one straight line through all cities on log scales: ln(PM2.5) = 11.71 − 0.86 × ln(GDP per person). Income explains 53% of the differences between cities (R² = 0.53).
+3. **Read off the expected level.** Each 1% richer goes with about 0.86% cleaner air.
+4. **Compare.** Measured ÷ expected gives the ratio. Above 1.3 means "worse than income peers: local causes likely". Otherwise structural, national causes matter most.
+5. **Suggest a cause.** High NO2 points to traffic, PM10 at least twice PM2.5 points to dust, and high PM2.5 with low NO2 points to burning. If NO2 or PM10 is missing, the cause is "unclear".
+
+Example: Delhi, with India's GDP per person of $6,945, is expected to have 59.7 µg/m³. Its measured 105.0 gives a ratio of 1.76, so it's worse than its income peers. The app shows these steps with a chart of every city, the line, and the selected city highlighted. The fitted numbers are in `data/clean/model_stats.json`.
 
 ## The prompt we started from
 
