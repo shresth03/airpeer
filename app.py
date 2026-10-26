@@ -122,7 +122,7 @@ if demo:
         raw = None
         st.warning("No saved demo trip yet. Add a Google Maps API key and run `python routes.py` to save one.")
 else:
-    with st.form("trip"):
+    with st.form("trip_form"):
         c1, c2 = st.columns(2)
         origin = c1.text_input("From", placeholder=f"e.g. a station in {city.city}")
         dest = c2.text_input("To", placeholder="e.g. your workplace")
