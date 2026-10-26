@@ -13,7 +13,7 @@ Pick your city and enter a trip. AirPeer then:
 
 | Data | Source | File |
 |---|---|---|
-| City annual PM2.5, PM10 and NO2 (mostly 2010–2019) | [WHO Ambient Air Quality Database, 2022 update](https://www.who.int/data/gho/data/themes/air-pollution/who-air-quality-database/2022) | `data/raw/who_aap_2021_v9_11august2022.xlsx` |
+| City annual PM2.5, PM10 and NO2 (mostly 2010–2019) | [WHO Ambient Air Quality Database, 2022 update](https://www.who.int/data/gho/data/themes/air-pollution/who-air-quality-database/2022) | `data/raw/who_aap_2021_v9_11august2022.xlsx` (not in the repo, © WHO; [download it here](https://cdn.who.int/media/docs/default-source/air-pollution-documents/air-quality-and-health/who_aap_2021_v9_11august2022.xlsx?sfvrsn=9035996c_3)) |
 | GDP per capita, PPP (NY.GDP.PCAP.PP.CD) | [World Bank API](https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.PP.CD?format=json&per_page=20000&date=2010:2019) | `data/raw/wb_gdp_pcap_ppp_2010_2019.json` |
 | kg CO₂e per km by mode | [UK Government GHG conversion factors 2025, condensed set](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025), sheet "Business travel- land" | `data/raw/ghg-conversion-factors-2025-condensed-set.xlsx` |
 | Live trip routes | [Google Maps Routes API](https://developers.google.com/maps/documentation/routes) (`computeRoutes`) | `data/demo_route.json` (saved response for demo mode) |
@@ -36,7 +36,7 @@ The cleaned data is committed, so the app runs offline. Demo mode uses the saved
 
 For live trips, copy `.streamlit/secrets.toml.example` to `.streamlit/secrets.toml` and add your `GOOGLE_MAPS_API_KEY` (the Routes API must be enabled). This file is git-ignored.
 
-To rebuild the clean data: `python prep.py && python model.py`. To save a new demo trip: `python routes.py "<from>" "<to>"`.
+To rebuild the clean data, first download the WHO Excel into `data/raw/` (link above), then run `python prep.py && python model.py`. To save a new demo trip: `python routes.py "<from>" "<to>"`.
 
 ## Limitations
 
