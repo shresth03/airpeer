@@ -8,9 +8,9 @@ Pick your city and enter a trip. AirPeer then:
 
 1. **Compares your city's air with the WHO limit.** It shows annual PM2.5 as a multiple of the WHO 2021 guideline of 5 µg/m³, and which WHO interim target (35, 25, 15, 10, 5) the city meets.
 2. **Compares it with income peers.** A regression of log PM2.5 on log GDP per capita (PPP) gives an expected level for the country's income. If the city is more than 1.3× that, local causes are likely. It also suggests a likely cause (traffic, dust, burning, mixed or unclear) using simple rules based on NO2, PM10 and PM2.5. The rules are in `rules.json`, with WHO sources.
-3. **Plans your trip, Google Maps style.** It gets driving, transit, cycling and walking routes from the Google Maps Routes API and estimates CO₂ for each. A side panel and a large map then show two routes:
+3. **Plans your trip, Google Maps style.** It gets driving, transit, cycling and walking routes from the Google Maps Routes API, including up to 3 alternative routes per mode, and estimates CO₂ for each route. A side panel and a large map then show two routes, with the other routes Google returned drawn in grey:
    - **Fastest** (blue): the quickest mode.
-   - **Best alternative** (green): the lowest-CO₂ option that is greener than the fastest and within the extra minutes you're willing to accept. If nothing greener fits your limit, it shows the greenest option and says it's over your limit. If the fastest option is also the cleanest, only that route appears.
+   - **Best alternative** (green): the lowest-CO₂ route that is greener than the fastest and within the extra minutes you're willing to accept. If nothing greener fits your limit, it shows the greener route closest to fitting and says how many extra minutes it needs. If the fastest option is also the cleanest, only that route appears.
 
    Mode tabs show the time for every mode, and route cards show time, distance, transit lines, CO₂ and the saving. The app also estimates the yearly CO₂ saved by taking the alternative there and back 3 days a week.
 4. **Drafts a letter to your council** asking for the intervention that fits the city's diagnosis.
@@ -60,6 +60,19 @@ To rebuild the clean data, first download the WHO Excel into `data/raw/` (link a
 - The WHO file does not include its "PM type" columns, so we can't tell measured PM2.5 from PM2.5 converted from PM10.
 - This is **not** the official modelled SDG 11.6.2 indicator.
 - Income explains about half the variation between cities (R² ≈ 0.53). "Expected" is a rough peer benchmark.
+- **Routes are not ranked by air quality along the way.** The WHO data has one yearly average per city, so it can't tell one street from another. Street-level air data (e.g. Google's Air Quality API) needs a paid API, so it is left out. Routes are ranked by CO₂ and travel time only.
 - Google Maps has no cycling routes in some countries (e.g. India), and transit coverage varies by city. Missing modes are listed as not available.
 - CO₂ factors are UK averages applied everywhere. The car factor is per vehicle-km, so it assumes one person driving alone.
 - The dust threshold (PM10 ≥ 2× PM2.5) is our own choice. The NO2 and PM2.5 thresholds are WHO guideline values.
+
+## Team contributions
+
+| Member | Part of the app | What they did |
+|---|---|---|
+| **Shresth Prakash** | Data and deployment | Downloaded the WHO, World Bank and UK conversion-factor datasets; wrote `prep.py` to build the clean city and emission-factor files; set up GitHub and Streamlit Cloud. |
+| **Shreya Jadav** | Model and diagnosis | Wrote `model.py` (income-peer regression, WHO limit multiple and interim targets) and `rules.json` (likely-cause rules with WHO sources); wrote the council letter. |
+| **Daniel Nwachi** | Trips and front end | Wrote `routes.py` (Google Routes API, route alternatives, CO₂ per route, fastest vs best alternative); built the Maps-style trip planner and page layout in `app.py`. |
+
+## The prompt we started from
+
+The full brief is in [`docs/initial_prompt.md`](docs/initial_prompt.md). The app also shows it at the bottom of the page.

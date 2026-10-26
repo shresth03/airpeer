@@ -9,7 +9,76 @@
       {
        "steps": [
         {
-         "distanceMeters": 105,
+         "distanceMeters": 83,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 263,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 286,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 254,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 93,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 206,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 848,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 1129,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 426,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 48,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 115,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 413,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 26,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "DRIVE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 4269,
+     "duration": "744s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{qemB_AiGCIIJbEbX{BpB}HxHOZ]wA}B}Mc@_CIGQkAkAcH_EjDyCjAs@f@iCjAoGnGuAjAeMfMqAtA_H|GcBcLs@wFqE}YgE{WaH_c@YsAGQxD}OrBwLh@}Cd@}CoAeAiAvHIx@[Yo@GYMaAm@WBQZqB|B{BnDi@f@_@JgANg@Xe@f@SoAoBn@[D"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 83,
          "travelMode": "DRIVE"
         },
         {
@@ -41,23 +110,124 @@
          "travelMode": "DRIVE"
         },
         {
-         "distanceMeters": 245,
+         "distanceMeters": 3471,
          "travelMode": "DRIVE"
         },
         {
-         "distanceMeters": 244,
+         "distanceMeters": 253,
          "travelMode": "DRIVE"
         },
         {
-         "distanceMeters": 482,
+         "distanceMeters": 45,
          "travelMode": "DRIVE"
         },
         {
-         "distanceMeters": 340,
+         "distanceMeters": 1377,
          "travelMode": "DRIVE"
         },
         {
-         "distanceMeters": 1224,
+         "distanceMeters": 464,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 413,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 26,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "DRIVE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 9706,
+     "duration": "771s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{qemB_AiGCIIJbEbXa@Ze@[YD}D~DI?uAvAoEnCgCvAyApAoAnBCRq@pAeA|Cy@nDKj@w@lG}BnUM`BaAfPeCbWY`CmDtTMl@aAdHu@bEs@xB_CnEa@l@_BfBoAt@k@PaDr@wB?s@QkAm@cAw@UGk@k@kAiB_AyBq@aBmBcD}C_FcB_DEc@kAkCoB}DoEkOQm@FaAgBwJgB}ImEoY]oCgA_GwBqKScBe@oH{@wQYyIS_KK_R@uPTqVP_JRoGh@qIbAgOd@}Hz@sUX}J?cDEgBQ_DeAkKQ_COeEEiEBkEFmC`@}HfAmOX_FNQRkD|@yQFaATq@VOTAPh@n@pD@j@p@`Dp@xChExTB^lAzGJTzHta@PlAP|AlAnHjAlFhAnEXt@NNz@vAxBpBz@fAiC~OMn@kDjTi@bE[Yo@GYMaAm@WBQZqB|B{BnDi@f@_@JgANg@Xe@f@SoAoBn@[D"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 83,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 263,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 312,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 1089,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 308,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 239,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 882,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 166,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 341,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 148,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 234,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 102,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 771,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 160,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 224,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 140,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 253,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 100,
          "travelMode": "DRIVE"
         },
         {
@@ -83,10 +253,10 @@
        ]
       }
      ],
-     "distanceMeters": 6817,
-     "duration": "720s",
+     "distanceMeters": 6561,
+     "duration": "890s",
      "polyline": {
-      "encodedPolyline": "s~biJuoemBqAoICIIJbEbXa@Ze@[YD}D~DI?uAvAoEnCgCvAyApAoAnBCRq@pAeA|Cy@nDKj@w@lG}BnUM`BaAfPeCbWY`CmDtTMl@aAdHu@bEs@xB_CnEa@l@_BfBoAt@k@PaDr@wB?s@QkAm@cAw@UGk@k@kAiB_AyBq@aBmBcD}C_FcB_DEc@kAkCoB}DoEkOQm@FaAgBwJ_B{H?s@K{@W{@cAiBs@kDq@SQUI[MaACo@`@]x@qANW~@aFHoA?yAe@oRAsGJk@Rq@LcACe@eBiLcA_NOqBBs@AQX{CLw@r@iClC{HX_AAQnKm[n@aBHGh@eBhBcGxD}OrBwLh@}Cd@}CoAeAiAvHIx@[Yo@GYMaAm@WBQZqB|B{BnDi@f@_@JgANg@Xe@f@SoAoBn@[D"
+      "encodedPolyline": "e_ciJ{qemB_AiGCIIJbEbXN?d@c@Tg@bDaONsA?sAG_AKo@IQi@mDCq@H_AVq@`@c@dBgA\\c@t@{AvIgSxAmCnBmCrAyA|AcArPmIT?vFyBRWFi@Ai@K[UMgAVyAl@IVJdCF@dAa@FK?[Iw@MQQ?}AfBo@`@GTyQ~I_BnAaBlBoBbDiBxD{H~QMPM?cAl@g@Hg@Oa@e@]aAUkACk@gAsG?O}DiVMDmBlBWDKKUqBKSMA_@FaAR}HtAg@yHCc@sCT_DPmE`@kLnAk@FkDbDy@h@{A|AQJOWQ_@Uv@kCjC_Ax@UaAeCcD}AaJnA_Dg@_AWe@mAaHH_AGc@CK]CSd@I`@iE_DISkAaAh@}Cd@}CoAeAiAvHIx@[Yo@GYMaAm@WBQZqB|B{BnDi@f@_@JgANg@Xe@f@SoAoBn@[D"
      }
     }
    ]
@@ -156,6 +326,407 @@
      "duration": "1042s",
      "polyline": {
       "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IWuAFG_@iEv@sAy@uCyAaDMKDkBqFiJ_C{E}BeHMiBEkCPwGf@kNBgIMwAQqA_@_BgBkEyAkG_ByI_A{FQe@MMcGgEuCSgEl@gD`AeEnBaE`DmC~DqCtGe@bB_@hCq@~KcBjQmClNaAiAN_IIMS?aAa@[SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 25,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 1181,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "19",
+           "vehicle": {
+            "type": "SUBWAY"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 8,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 601,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 343,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3061,
+     "duration": "1853s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IWuAFGOwGd@w@m@sBu@eDu@}B?EeA{@kCSyKYeEpEqY`XF`@JRCBAEDEMu@GFQqAWaASyAaAeFBEIc@EBaAuF@CIm@CBs@_EGm@DEUoAEDKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 38,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 87,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 218,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 76,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 32,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 20,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 1919,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "291",
+           "vehicle": {
+            "type": "BUS"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 45,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 37,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 476,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3474,
+     "duration": "1674s",
+     "polyline": {
+      "encodedPolyline": "a~biJypemBUa@Qy@KDAEy@bAe@bASHUNsDdFs@`AEL{@fAGQ?@u@{DIOAKNS?w@_@^BLSEsJal@kAeI_@mCOqDw@ac@K}EYgBSYwI{G{DyCwGaFUWcGkE{BoBcCgB@CBQo@g@BMSQETWc@]_@D]QSCPCECPETDDAHEGGZBB}BrNId@_CbOIz@Kn@I\\OXe@hD?VGGMbAIEs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 38,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 87,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 218,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 76,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 32,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 20,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 3274,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "697",
+           "vehicle": {
+            "type": "BUS"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 89,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 298,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 4658,
+     "duration": "1790s",
+     "polyline": {
+      "encodedPolyline": "a~biJypemBUa@Qy@KDAEy@bAe@bASHUNsDdFs@`AEL{@fAGQ?@u@{DIOAKNS?w@_@^BLYgBu@mCKu@{DfDyAp@c@TDEg@XOn@E~@?TJz@r@|DH\\iCzSq@dGcBdRg@zEu@xFo@rCw@jCc@lA_AtBm@`A}@|@oAfAsAnACOO`@w@l@SwAwMyy@_CrBEs@EkCH]G?KeHG_EG{AuAaJ{AmJ{DsV_Iqg@JCDEU{AMa@@KOUCNG[Wg@@CIMGXEGHa@Ma@jAyE~AwGxAeIQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 78,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 70,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 483,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 785,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 146,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 232,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 343,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 2960,
+     "duration": "2537s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IUsAAk@a@cCEGSRKEoAdAu@oEGOu@eEMc@e@cCEa@s@qEo@}DM_@SuALCEg@IBOeCMaAKgBLEAc@O@CWQB@ViCPeBFK??DaDXSG}@HKJ_Ix@}CTeD`Dq@b@O`@IAsAlAFSi@}@c@rA@N{CrC]XKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 34,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 37,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 241,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 21,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 3118,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "595",
+           "vehicle": {
+            "type": "BUS"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 57,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 40,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 961,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "94",
+           "vehicle": {
+            "type": "BUS"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 68,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 22,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 5253,
+     "duration": "2020s",
+     "polyline": {
+      "encodedPolyline": "q|biJc_fmBi@yA]aBmCdCQ@s@h@Sb@wCnCBPOJEUEDAIKw@p@w@Fd@@HiAdAgFzDkDxCyCjASrACVA`@\\xA\\zBHlAAd@w@pGuAtK}@`J_B~QeA`ImA|EsAzD}@hBq@|@oJrI{D~CoFuDKgDIWQkND_@O_NhFcFoAoImAwG}B~BQcJK_FD_@BgAEoBiD{TsBhBCOpAkA[mBZWDEmIyh@eDoSWiAGQxD}OtAmIFFFFs@vEYY]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
      }
     }
    ]
@@ -258,6 +829,160 @@
      "polyline": {
       "encodedPolyline": "o_ciJyxemBWiAIAa@`@PlAQmAHKyA{J}@uFqBfBkCcOgAcGcBaLg@yHCc@sCT_DPmE`@kLnAk@FkDbDy@h@{A|AQJOWQ_@Uv@kCjC_Ax@_AbAiDdDq@Z}CJCFuBDSI]i@q@l@uAvAuDqUWiAGQxD}OjBgLg@m@Qc@GGIx@[Yo@GYMaAm@WBCYsD}BuB}AKGoD[{@G@f@CdARhF^hIoBn@[D"
      }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 40,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 87,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 218,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 94,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 1047,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 1156,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 85,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 260,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 320,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 17,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 111,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 8,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 185,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 131,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 194,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "BICYCLE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 4076,
+     "duration": "1052s",
+     "polyline": {
+      "encodedPolyline": "s~biJuoemB_@_C}@bAe@bAWHGCKHsDdFu@bAEJmA~Aw@eEIGQkAsJal@kAeI_@mCOqDw@ac@K}Em@lAIDuDnGWf@ML[|@u@jC]n@g@v@eHnH_@Lo@z@_A~AaAnCOj@kCjC_Ax@_AbAiDdDq@Z}CJCFuBDSI]i@q@l@uAvAuDqUWiAGQxD}OjBgLg@m@Qc@GGIx@[Yo@GYMaAm@WBCYsD}BuB}AKGoD[{@G@f@CdARhF^hIoBn@[D"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 40,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 87,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 218,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 94,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 1047,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 895,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 95,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 51,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 571,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 111,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 8,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 185,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 131,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 194,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "BICYCLE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3804,
+     "duration": "1047s",
+     "polyline": {
+      "encodedPolyline": "s~biJuoemB_@_C}@bAe@bAWHGCKHsDdFu@bAEJmA~Aw@eEIGQkAsJal@kAeI_@mCOqDw@ac@K}EYgBSYwI{G{DyCwGaFUWcGkE{BoBmDkCMMdAmGD[Ka@_A{@eBnL{B~MqD`Ui@bE[Yo@GYMaAm@WBCYsD}BuB}AKGoD[{@G@f@CdARhF^hIoBn@[D"
+     }
     }
    ]
   },
@@ -338,6 +1063,156 @@
      "duration": "2536s",
      "polyline": {
       "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IUsAAk@a@cCEGSRKEoAdAu@oEGOu@eEMc@e@cCEa@s@qEo@}DM_@SuALCEg@IBOeCMaAKgBLEAc@O@CWQB@ViCPeBFK??DaDXSG}@HKJ_Ix@}CTeD`Dq@b@O`@IAsAlAFSi@}@c@rA@N{CrC]XKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 78,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 70,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 381,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 442,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 21,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 415,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 423,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 343,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 2996,
+     "duration": "2564s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IUsAAk@a@cCEGSRKEoAdACK[^o@_E_A_FCg@g@iCGDG_@BE}@qFc@uCEk@QsAo@PUCw@PSLe@?aB`@W?iElAQJGG@FMF?CcBh@UR}Ah@Cp@Ol@YXqD|BcB`Ac@RgAp@QRm@^DTYRAG}BnBe@d@Ic@EBaAuF@CIm@CBs@_EGm@DEUoAEDKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    },
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 308,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 53,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 938,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 594,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 343,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3059,
+     "duration": "2645s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IUsAAk@_@_CKUu@_FC]k@wDK[g@iDCi@BYFSOEEL[QOJGwAQYYWa@NU^YPc@JOHS@OPgCtAQPeAd@ACMBoDzDIAwAnADNYXCSiEzDBRQVEYgExDBNMJCKkC`CBLWVCM{CpCMu@GFQqAWaASyAaAeFBEIc@EBaAuF@CIm@CBs@_EGm@DEUoAEDKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
      }
     }
    ]

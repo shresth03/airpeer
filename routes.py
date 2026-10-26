@@ -28,15 +28,19 @@ def load_factors():
 
 
 def fetch_all(origin, destination, api_key, timeout=15):
-    """Call computeRoutes once per mode; return {mode: raw JSON or {'error': ...}}."""
+    """Call computeRoutes once per mode, asking for alternative routes; return {mode: raw JSON or {'error': ...}}."""
     raw = {}
     headers = {"Content-Type": "application/json", "X-Goog-Api-Key": api_key, "X-Goog-FieldMask": FIELD_MASK}
     for mode in MODES:
-        body = {"origin": {"address": origin}, "destination": {"address": destination}, "travelMode": mode}
+        body = {"origin": {"address": origin}, "destination": {"address": destination}, "travelMode": mode,
+                "computeAlternativeRoutes": True}
         if mode == "DRIVE":
             body["routingPreference"] = "TRAFFIC_AWARE"
         try:
             r = requests.post(URL, headers=headers, json=body, timeout=timeout)
+            if r.status_code == 400:  # mode may not support alternatives; retry for the single best route
+                body.pop("computeAlternativeRoutes")
+                r = requests.post(URL, headers=headers, json=body, timeout=timeout)
             raw[mode] = r.json() if r.ok else {"error": f"HTTP {r.status_code}: {r.text[:200]}"}
         except requests.RequestException as e:
             raw[mode] = {"error": str(e)}
@@ -48,37 +52,52 @@ def _seconds(duration):
 
 
 def summarise(raw, factors=None):
-    """Turn raw responses into one option per mode with time, distance, CO2 and polyline."""
+    """Turn raw responses into one option per route (several per mode when Google returns alternatives).
+
+    A mode with no route at all gets a single entry with available=False.
+    """
     factors = factors or load_factors()
     options = []
     for mode, label in MODES.items():
         resp = raw["responses"].get(mode, {})
         routes = resp.get("routes") or []
         if not routes:
-            options.append({"mode": mode, "label": label, "available": False,
+            options.append({"mode": mode, "label": label, "available": False, "id": f"{mode}-0",
                             "reason": resp.get("error", "No route found for this mode.")})
             continue
-        route = routes[0]
-        km = route.get("distanceMeters", 0) / 1000
-        steps = [s for leg in route.get("legs", []) for s in leg.get("steps", [])]
-        lines = []
-        if mode == "DRIVE":
-            co2 = km * factors["car"]["kg_co2e_per_km"]
-        elif mode == "TRANSIT":
-            co2 = 0.0
-            for s in steps:
-                if s.get("travelMode") != "TRANSIT":
-                    continue  # walking legs inside a transit trip are zero
-                line = s.get("transitDetails", {}).get("transitLine", {})
-                key = VEHICLE_FACTOR.get(line.get("vehicle", {}).get("type"), "bus")
-                co2 += s.get("distanceMeters", 0) / 1000 * factors[key]["kg_co2e_per_km"]
-                lines.append(f"{line.get('nameShort') or key} ({key})")
-        else:
-            co2 = 0.0
-        options.append({"mode": mode, "label": label, "available": True, "km": km,
-                        "minutes": _seconds(route.get("duration")) / 60, "kg_co2": co2,
-                        "polyline": route.get("polyline", {}).get("encodedPolyline"), "lines": lines})
+        for i, route in enumerate(routes):
+            km = route.get("distanceMeters", 0) / 1000
+            steps = [s for leg in route.get("legs", []) for s in leg.get("steps", [])]
+            lines = []
+            if mode == "DRIVE":
+                co2 = km * factors["car"]["kg_co2e_per_km"]
+            elif mode == "TRANSIT":
+                co2 = 0.0
+                for s in steps:
+                    if s.get("travelMode") != "TRANSIT":
+                        continue  # walking legs inside a transit trip are zero
+                    line = s.get("transitDetails", {}).get("transitLine", {})
+                    key = VEHICLE_FACTOR.get(line.get("vehicle", {}).get("type"), "bus")
+                    co2 += s.get("distanceMeters", 0) / 1000 * factors[key]["kg_co2e_per_km"]
+                    lines.append(f"{line.get('nameShort') or key} ({key})")
+                lines = lines or ["walking only"]
+            else:
+                co2 = 0.0
+            options.append({"mode": mode, "label": label, "available": True, "id": f"{mode}-{i}",
+                            "route_no": i + 1, "km": km, "minutes": _seconds(route.get("duration")) / 60,
+                            "kg_co2": co2, "polyline": route.get("polyline", {}).get("encodedPolyline"),
+                            "lines": lines})
     return options
+
+
+def best_per_mode(options):
+    """Quickest route of each mode, in MODES order (unavailable modes kept as-is), for the mode tabs."""
+    out = []
+    for mode in MODES:
+        mine = [o for o in options if o["mode"] == mode]
+        avail = [o for o in mine if o["available"]]
+        out.append(min(avail, key=lambda o: o["minutes"]) if avail else mine[0])
+    return out
 
 
 def recommend(options, tolerance_min=15):
@@ -92,25 +111,29 @@ def recommend(options, tolerance_min=15):
     return min(ok, key=lambda o: (o["kg_co2"], o["minutes"]))
 
 
-def fastest_and_alternative(options, tolerance_min=15):
+def fastest_and_alternative(options, tolerance_min=15, score=None):
     """Return (fastest, alternative, within_tolerance).
 
-    The alternative is the lowest-CO2 option that is greener than the fastest and at most
-    tolerance_min slower. If none fits, it is the greener option closest to fitting, i.e. the
-    one with the least extra time (within_tolerance=False). It is None when the fastest option
-    is already the cleanest.
+    score(option) is what the alternative must improve on, lower being better (CO2 by default).
+    Options with score None are skipped. The
+    alternative is the best-scoring route that beats the fastest and is at most tolerance_min
+    slower. If none fits, it is the improving route closest to fitting (least extra time,
+    within_tolerance=False). It is None when the fastest route already scores best.
     """
+    score = score or (lambda o: o["kg_co2"])
     avail = [o for o in options if o["available"]]
     if not avail:
         return None, None, False
     fastest = min(avail, key=lambda o: o["minutes"])
-    greener = [o for o in avail if o is not fastest and o["kg_co2"] < fastest["kg_co2"]]
-    if not greener:
+    base = score(fastest)
+    better = [o for o in avail if o is not fastest and score(o) is not None
+              and (base is None or score(o) < base)]
+    if not better:
         return fastest, None, False
-    within = [o for o in greener if o["minutes"] - fastest["minutes"] <= tolerance_min]
+    within = [o for o in better if o["minutes"] - fastest["minutes"] <= tolerance_min]
     if within:
-        return fastest, min(within, key=lambda o: (o["kg_co2"], o["minutes"])), True
-    return fastest, min(greener, key=lambda o: (o["minutes"], o["kg_co2"])), False
+        return fastest, min(within, key=lambda o: (score(o), o["kg_co2"], o["minutes"])), True
+    return fastest, min(better, key=lambda o: (o["minutes"], score(o))), False
 
 
 def yearly_saving_kg(baseline, chosen, trips_per_week=3, weeks=52):

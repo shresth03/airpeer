@@ -22,7 +22,8 @@ GREEN = {"color": "#1e8e3e", "casing": "#0d652d"}
 st.set_page_config(page_title="AirPeer", page_icon="🌍", layout="wide")
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-html, body, [class*="st-"], .stMarkdown, .stCaption { font-family: 'Roboto', sans-serif; }
+html, body, p, li, td, th, label, input, textarea, button, h1, h2, h3 { font-family: 'Roboto', sans-serif; }
+[data-testid="stIconMaterial"] { font-family: 'Material Symbols Rounded' !important; }
 .block-container { padding-top: 1.5rem; max-width: 1400px; }
 .ap-panel { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15); padding:4px 0; }
 .ap-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
@@ -66,7 +67,8 @@ def route_card(o, tag, tag_color, detail):
         f'<div class="ap-route"><div class="ap-bar" style="background:{tag_color}"></div><div style="flex:1">',
         f'<div class="ap-tag" style="color:{tag_color}">{tag}</div>',
         f'<div style="display:flex;justify-content:space-between;align-items:baseline">',
-        f'<span style="font-size:16px;color:#202124">{MODE_ICONS[o["mode"]]} {o["label"]}</span>',
+        f'<span style="font-size:16px;color:#202124">{MODE_ICONS[o["mode"]]} {o["label"]}'
+        f'{" · route " + str(o["route_no"]) if o.get("route_no", 1) > 1 else ""}</span>',
         f'<span class="ap-time">{o["minutes"]:.0f} min</span></div>',
         f'<div class="ap-sub">{o["km"]:.1f} km{" · " + ", ".join(o["lines"]) if o["lines"] else ""}</div>',
         f'<div class="ap-co2">{detail}</div></div></div>',
@@ -198,7 +200,7 @@ with panel:
         st.markdown('<div class="ap-tabs">' + "".join(
             f'<span class="ap-tab {"on" if o["mode"] in shown else ""}">{MODE_ICONS[o["mode"]]} {o["minutes"]:.0f} min</span>'
             if o["available"] else f'<span class="ap-tab off">{MODE_ICONS[o["mode"]]} n/a</span>'
-            for o in options) + "</div>", unsafe_allow_html=True)
+            for o in routes.best_per_mode(options)) + "</div>", unsafe_allow_html=True)
 
         cards = [route_card(fastest, "Fastest", FAST["color"], f'{fastest["kg_co2"]:.2f} kg CO₂')]
         if alternative:
@@ -220,7 +222,7 @@ with panel:
                 need = alternative["minutes"] - fastest["minutes"]
                 st.info(f"No greener option is within {tolerance} extra minutes. Allow at least {math.ceil(need)} to get "
                         f"{alternative['label'].lower()} recommended (saves about {saving:,.0f} kg CO₂ a year).")
-        missing = [o["label"] for o in options if not o["available"]]
+        missing = [o["label"] for o in routes.best_per_mode(options) if not o["available"]]
         if missing:
             st.caption("Not available for this trip: " + ", ".join(missing) + ".")
 
@@ -231,6 +233,12 @@ with map_col:
         paths = [polyline.decode(o["polyline"]) for o, _, _ in shown_routes]
         pts = [p for path in paths for p in path]
         fmap = folium.Map(tiles="OpenStreetMap", scrollWheelZoom=False, zoom_control=True)  # page scrolling must not zoom the map
+        # Other routes Google returned, in grey underneath, as Google Maps shows alternatives.
+        others = [o for o in options if o["available"] and o.get("polyline") and o is not fastest and o is not alternative]
+        for o in others:
+            name = o["label"] + (f" · route {o['route_no']}" if o["route_no"] > 1 else "")
+            folium.PolyLine(polyline.decode(o["polyline"]), color="#9aa0a6", weight=5, opacity=0.7,
+                            tooltip=f"{MODE_ICONS[o['mode']]} {name}: {o['minutes']:.0f} min · {o['kg_co2']:.2f} kg CO₂").add_to(fmap)
         # Alternative drawn first so the fastest (blue) sits on top where they overlap, as in Google Maps.
         for (o, style, _), path in zip(shown_routes, paths):
             add_route(fmap, path, style, f"{MODE_ICONS[o['mode']]} {o['minutes']:.0f} min · {o['kg_co2']:.2f} kg CO₂")
@@ -248,7 +256,10 @@ with map_col:
     st.caption(f"CO₂ uses UK government 2025 factors: car {factors['car']['kg_co2e_per_km']} kg per km "
                f"(one person driving alone), bus {factors['bus']['kg_co2e_per_km']}, metro "
                f"{factors['metro']['kg_co2e_per_km']}, rail {factors['rail']['kg_co2e_per_km']} kg per passenger-km. "
-               "Cycling and walking count as zero.")
+               "Cycling and walking count as zero. Grey lines are other routes Google returned; hover for details.")
+    st.caption("**Air quality along routes is not compared.** Routes are ranked by CO₂ and travel time only. The WHO "
+               "data has one yearly average per city, so it can't tell one street from another, and street-level air "
+               "data (such as Google's Air Quality API) needs a paid API, so it is left out.")
 
 # ---------- Council letter ----------
 st.divider()
@@ -297,5 +308,19 @@ st.caption(
     "**Please note:** these are yearly averages from ground monitoring stations, mostly measured between 2010 and 2019. "
     "Stations are sparse in many lower-income countries, and some cities' values may have been estimated from other "
     "particle measurements. These are not the UN's official modelled city air-quality figures. CO₂ factors are UK "
-    "averages applied to every country."
+    "averages applied to every country. Routes are not ranked by street-level air quality (that needs a paid API)."
 )
+
+# ---------- How we built it ----------
+st.divider()
+st.subheader("Team contributions")
+st.markdown("""
+| Member | Part of the app | What they did |
+|---|---|---|
+| **Shresth Prakash** | Data and deployment | Downloaded the WHO, World Bank and UK conversion-factor datasets; wrote `prep.py` to build the clean city and emission-factor files; set up GitHub and Streamlit Cloud. |
+| **Shreya Jadav** | Model and diagnosis | Wrote `model.py` (income-peer regression, WHO limit multiple and interim targets) and `rules.json` (likely-cause rules with WHO sources); wrote the council letter. |
+| **Daniel Nwachi** | Trips and front end | Wrote `routes.py` (Google Routes API, route alternatives, CO₂ per route, fastest vs best alternative); built the Maps-style trip planner and page layout in `app.py`. |
+""")
+
+with st.expander("The prompt we started from"):
+    st.code((ROOT / "docs" / "initial_prompt.md").read_text(), language=None, wrap_lines=True)
