@@ -1,0 +1,64 @@
+{
+  "thresholds": {
+    "_note": "Thresholds use WHO Air Quality Guidelines 2021 values: PM2.5 interim target 1 = 35, NO2 interim target 2 = 30 and target 3 = 20 µg/m³. The PM10/PM2.5 cut-off of 2 marks a coarse, dust-heavy mix (more than half of PM10 is coarse dust); it is our design choice, not a WHO number.",
+    "no2_high": 30,
+    "no2_low": 20,
+    "pm25_high": 35,
+    "pm10_to_pm25_dusty": 2.0
+  },
+  "sources": {
+    "who_aqg_2021": "https://www.who.int/publications/i/item/9789240034228",
+    "who_ambient_factsheet": "https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health",
+    "who_household_factsheet": "https://www.who.int/news-room/fact-sheets/detail/household-air-pollution-and-health"
+  },
+  "rules": [
+    {
+      "id": "traffic",
+      "label": "Traffic",
+      "when": "NO2 is at or above 30 µg/m³",
+      "explain": "Nitrogen dioxide comes mostly from vehicle exhausts, so high NO2 points to traffic.",
+      "actions": ["Low-emission zones in the city centre", "More frequent, cheaper public transport", "Protected cycling lanes"],
+      "source": "who_ambient_factsheet"
+    },
+    {
+      "id": "dust",
+      "label": "Dust",
+      "when": "PM10 is at least twice PM2.5",
+      "explain": "Much of the particle pollution is coarse dust, typical of construction, unpaved roads and bare ground.",
+      "actions": ["Dust controls on construction sites", "Paving or watering unpaved roads", "More trees and green cover"],
+      "source": "who_ambient_factsheet"
+    },
+    {
+      "id": "burning",
+      "label": "Burning",
+      "when": "PM2.5 is above 35 µg/m³ while NO2 is below 20 µg/m³",
+      "explain": "Very fine particles without much traffic gas point to burning: cooking and heating fuels, waste or crop burning.",
+      "actions": ["Support for clean cooking and heating", "Enforced bans on open waste burning"],
+      "source": "who_household_factsheet"
+    },
+    {
+      "id": "unclear",
+      "label": "Cause unclear",
+      "when": "NO2 or PM10 was not measured",
+      "explain": "This city did not report NO2 or PM10, so we cannot tell what is driving its pollution.",
+      "actions": ["Expand public air-quality monitoring (NO2 and PM10) and publish the data"],
+      "source": "who_aqg_2021"
+    },
+    {
+      "id": "mixed",
+      "label": "Mixed sources",
+      "when": "PM2.5 is above the WHO limit but no single pattern stands out",
+      "explain": "Pollution comes from several sources at once, often power, industry and regional haze.",
+      "actions": ["A city clean-air plan covering energy, industry and transport", "Pushing national government for cleaner power"],
+      "source": "who_ambient_factsheet"
+    },
+    {
+      "id": "clean",
+      "label": "Within the WHO limit",
+      "when": "PM2.5 is at or below 5 µg/m³",
+      "explain": "Fine-particle pollution already meets the WHO guideline.",
+      "actions": ["Keep current clean-air policies and protect them in future budgets"],
+      "source": "who_aqg_2021"
+    }
+  ]
+}
