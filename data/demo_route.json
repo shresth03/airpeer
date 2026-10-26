@@ -1,0 +1,346 @@
+{
+ "origin": "Stockholm Central Station, Stockholm",
+ "destination": "KTH Royal Institute of Technology, Stockholm",
+ "responses": {
+  "DRIVE": {
+   "routes": [
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 105,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 263,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 20,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 162,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 54,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 318,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 1884,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 794,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 245,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 244,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 482,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 340,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 1224,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 48,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 115,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 413,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 26,
+         "travelMode": "DRIVE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "DRIVE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 6817,
+     "duration": "720s",
+     "polyline": {
+      "encodedPolyline": "s~biJuoemBqAoICIIJbEbXa@Ze@[YD}D~DI?uAvAoEnCgCvAyApAoAnBCRq@pAeA|Cy@nDKj@w@lG}BnUM`BaAfPeCbWY`CmDtTMl@aAdHu@bEs@xB_CnEa@l@_BfBoAt@k@PaDr@wB?s@QkAm@cAw@UGk@k@kAiB_AyBq@aBmBcD}C_FcB_DEc@kAkCoB}DoEkOQm@FaAgBwJ_B{H?s@K{@W{@cAiBs@kDq@SQUI[MaACo@`@]x@qANW~@aFHoA?yAe@oRAsGJk@Rq@LcACe@eBiLcA_NOqBBs@AQX{CLw@r@iClC{HX_AAQnKm[n@aBHGh@eBhBcGxD}OrBwLh@}Cd@}CoAeAiAvHIx@[Yo@GYMaAm@WBQZqB|B{BnDi@f@_@JgANg@Xe@f@SoAoBn@[D"
+     }
+    }
+   ]
+  },
+  "TRANSIT": {
+   "routes": [
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 25,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 59,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 2893,
+         "transitDetails": {
+          "transitLine": {
+           "nameShort": "14",
+           "vehicle": {
+            "type": "SUBWAY"
+           }
+          }
+         },
+         "travelMode": "TRANSIT"
+        },
+        {
+         "distanceMeters": 91,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 325,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3729,
+     "duration": "1042s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IWuAFG_@iEv@sAy@uCyAaDMKDkBqFiJ_C{E}BeHMiBEkCPwGf@kNBgIMwAQqA_@_BgBkEyAkG_ByI_A{FQe@MMcGgEuCSgEl@gD`AeEnBaE`DmC~DqCtGe@bB_@hCq@~KcBjQmClNaAiAN_IIMS?aAa@[SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    }
+   ]
+  },
+  "BICYCLE": {
+   "routes": [
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 52,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 24,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 24,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 7,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 78,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 70,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 483,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 785,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 511,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 85,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 260,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 320,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 17,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 111,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 8,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 185,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 131,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 194,
+         "travelMode": "BICYCLE"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "BICYCLE"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 3587,
+     "duration": "965s",
+     "polyline": {
+      "encodedPolyline": "o_ciJyxemBWiAIAa@`@PlAQmAHKyA{J}@uFqBfBkCcOgAcGcBaLg@yHCc@sCT_DPmE`@kLnAk@FkDbDy@h@{A|AQJOWQ_@Uv@kCjC_Ax@_AbAiDdDq@Z}CJCFuBDSI]i@q@l@uAvAuDqUWiAGQxD}OjBgLg@m@Qc@GGIx@[Yo@GYMaAm@WBCYsD}BuB}AKGoD[{@G@f@CdARhF^hIoBn@[D"
+     }
+    }
+   ]
+  },
+  "WALK": {
+   "routes": [
+    {
+     "legs": [
+      {
+       "steps": [
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 46,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 119,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 78,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 70,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 483,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 785,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 146,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 232,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 343,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 5,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 123,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 360,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 23,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 64,
+         "travelMode": "WALK"
+        },
+        {
+         "distanceMeters": 79,
+         "travelMode": "WALK"
+        }
+       ]
+      }
+     ],
+     "distanceMeters": 2960,
+     "duration": "2536s",
+     "polyline": {
+      "encodedPolyline": "e_ciJ{xemBYkACGYGKJqA{IUsAAk@a@cCEGSRKEoAdAu@oEGOu@eEMc@e@cCEa@s@qEo@}DM_@SuALCEg@IBOeCMaAKgBLEAc@O@CWQB@ViCPeBFK??DaDXSG}@HKJ_Ix@}CTeD`Dq@b@O`@IAsAlAFSi@}@c@rA@N{CrC]XKa@BAGWEDcC}CwAkIJW[y@BG@_@Ku@IYi@e@aCyAIBY]IVo@s@cDwB_@CUSCE]@ELGGi@g@lA}GQMs@@{@][SMBeBxB]J{BjDk@f@WFeANAeACe@YT_@Jg@^Ca@MBB^}@XgAS"
+     }
+    }
+   ]
+  }
+ }
+}
