@@ -96,8 +96,9 @@ def fastest_and_alternative(options, tolerance_min=15):
     """Return (fastest, alternative, within_tolerance).
 
     The alternative is the lowest-CO2 option that is greener than the fastest and at most
-    tolerance_min slower. If none fits, it is the greenest option overall (within_tolerance=False).
-    It is None when the fastest option is already the cleanest.
+    tolerance_min slower. If none fits, it is the greener option closest to fitting, i.e. the
+    one with the least extra time (within_tolerance=False). It is None when the fastest option
+    is already the cleanest.
     """
     avail = [o for o in options if o["available"]]
     if not avail:
@@ -107,8 +108,9 @@ def fastest_and_alternative(options, tolerance_min=15):
     if not greener:
         return fastest, None, False
     within = [o for o in greener if o["minutes"] - fastest["minutes"] <= tolerance_min]
-    pool = within or greener
-    return fastest, min(pool, key=lambda o: (o["kg_co2"], o["minutes"])), bool(within)
+    if within:
+        return fastest, min(within, key=lambda o: (o["kg_co2"], o["minutes"])), True
+    return fastest, min(greener, key=lambda o: (o["minutes"], o["kg_co2"])), False
 
 
 def yearly_saving_kg(baseline, chosen, trips_per_week=3, weeks=52):

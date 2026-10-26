@@ -1,4 +1,5 @@
 """AirPeer: how clean is your city's air, and what's the cleanest way to get around it?"""
+import math
 from pathlib import Path
 
 import altair as alt
@@ -203,7 +204,7 @@ with panel:
         if alternative:
             extra = alternative["minutes"] - fastest["minutes"]
             saved = fastest["kg_co2"] - alternative["kg_co2"]
-            tag = "Best alternative · greener" if within else f"Greenest option · over your {tolerance}-min limit"
+            tag = "Best alternative · greener" if within else f"Greener option · over your {tolerance}-min limit"
             cards.append(route_card(alternative, tag, GREEN["color"],
                                     f'{alternative["kg_co2"]:.2f} kg CO₂ · <b>{saved:.2f} kg less</b> · {extra:+.0f} min'))
         st.markdown('<div class="ap-panel">' + "".join(cards) + "</div>", unsafe_allow_html=True)
@@ -216,7 +217,8 @@ with panel:
                 st.success(f"🌱 Going by {alternative['label'].lower()} there and back **3 days a week saves about "
                            f"{saving:,.0f} kg CO₂ a year**.")
             else:
-                st.info(f"No greener option is within {tolerance} extra minutes. Allow more minutes to get "
+                need = alternative["minutes"] - fastest["minutes"]
+                st.info(f"No greener option is within {tolerance} extra minutes. Allow at least {math.ceil(need)} to get "
                         f"{alternative['label'].lower()} recommended (saves about {saving:,.0f} kg CO₂ a year).")
         missing = [o["label"] for o in options if not o["available"]]
         if missing:
