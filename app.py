@@ -83,15 +83,16 @@ if diagnosis:
         "pm25": [city.pm25, city.expected_pm25, 5.0],
         "kind": ["city", "peer", "who"],
     })
-    chart = alt.Chart(bars).mark_bar(cornerRadiusEnd=4, height=26).encode(
+    chart = alt.Chart(bars).mark_bar(cornerRadiusEnd=4).encode(
         x=alt.X("pm25:Q", title="PM2.5 (µg/m³)", axis=alt.Axis(grid=False)),
         y=alt.Y("what:N", sort=None, title=None, axis=alt.Axis(labelLimit=260)),
         color=alt.Color("kind:N", scale=alt.Scale(domain=["city", "peer", "who"],
                                                   range=[color, "#9ca3af", "#15803d"]), legend=None),
         tooltip=[alt.Tooltip("what:N", title=""), alt.Tooltip("pm25:Q", title="µg/m³", format=".1f")],
     )
-    text = chart.mark_text(align="left", dx=6, color="#374151").encode(text=alt.Text("pm25:Q", format=".1f"))
-    st.altair_chart((chart + text).properties(height=130), width="stretch")
+    text = chart.mark_text(align="left", dx=6).encode(text=alt.Text("pm25:Q", format=".1f"),
+                                                      color=alt.value("#374151"))
+    st.altair_chart((chart + text).properties(height=alt.Step(34)), width="stretch")
     st.markdown(f"**{diagnosis}**  \n{city.city} has **{city.ratio:.1f}×** the pollution we'd expect "
                 f"for a country with {city.country}'s income (GDP per person ${city.gdp_pcap_ppp:,.0f}, {int(city.gdp_year)}).")
     st.caption(f"Expected level comes from comparing {stats['n']:,} cities' pollution with their country's "
