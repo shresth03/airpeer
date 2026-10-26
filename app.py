@@ -178,7 +178,7 @@ if raw:
         paths = {o["mode"]: polyline.decode(o["polyline"]) for o in avail if o.get("polyline")}
         if paths:
             pts = [p for path in paths.values() for p in path]
-            fmap = folium.Map(tiles="OpenStreetMap")
+            fmap = folium.Map(tiles="OpenStreetMap", scrollWheelZoom=False)  # page scrolling must not zoom the map
             for o in avail:
                 if o["mode"] in paths:
                     is_best = best and o["mode"] == best["mode"]
@@ -189,7 +189,8 @@ if raw:
             folium.Marker(pts[-1], tooltip="End", icon=folium.Icon(color="red")).add_to(fmap)
             fmap.fit_bounds([[min(p[0] for p in pts), min(p[1] for p in pts)],
                              [max(p[0] for p in pts), max(p[1] for p in pts)]])
-            st_folium(fmap, height=380, use_container_width=True, returned_objects=[])
+            st_folium(fmap, height=380, use_container_width=True, returned_objects=[],
+                      key=f"map_{raw['origin']}_{raw['destination']}")
             st.caption("  ".join(f"<span style='color:{MODE_COLORS[m]}'>━━</span> {routes.MODES[m]}"
                                  for m in paths), unsafe_allow_html=True)
         st.caption(f"CO₂ uses UK government 2025 factors: car {factors['car']['kg_co2e_per_km']} kg per km "
