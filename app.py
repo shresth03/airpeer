@@ -147,13 +147,15 @@ if raw:
         for col, o in zip(cols, avail):
             is_best = best and o["mode"] == best["mode"]
             border = "#15803d" if is_best else "#e5e7eb"
-            col.markdown(
-                f"""<div style="border:2px solid {border};border-radius:12px;padding:12px;text-align:center">
-                <div style="font-size:26px">{MODE_ICONS[o['mode']]}</div><b>{o['label']}</b>
-                {'<div style="color:#15803d;font-size:13px;font-weight:600">Recommended</div>' if is_best else ''}
-                <div style="font-size:14px;margin-top:6px">{o['minutes']:.0f} min · {o['km']:.1f} km</div>
-                <div style="font-size:18px;font-weight:600">{o['kg_co2']:.2f} kg CO₂</div></div>""",
-                unsafe_allow_html=True)
+            # Joined on one line: blank or indented lines would make Markdown show the HTML as code.
+            tag = ('<div style="color:#15803d;font-size:13px;font-weight:600">Recommended</div>'
+                   if is_best else '<div style="font-size:13px">&nbsp;</div>')
+            col.markdown("".join([
+                f'<div style="border:2px solid {border};border-radius:12px;padding:12px;text-align:center">',
+                f'<div style="font-size:26px">{MODE_ICONS[o["mode"]]}</div><b>{o["label"]}</b>{tag}',
+                f'<div style="font-size:14px;margin-top:6px">{o["minutes"]:.0f} min · {o["km"]:.1f} km</div>',
+                f'<div style="font-size:18px;font-weight:600">{o["kg_co2"]:.2f} kg CO₂</div></div>',
+            ]), unsafe_allow_html=True)
         for o in errors:
             st.caption(f"{MODE_ICONS[o['mode']]} {o['label']}: not available for this trip.")
 
@@ -176,7 +178,7 @@ if raw:
         paths = {o["mode"]: polyline.decode(o["polyline"]) for o in avail if o.get("polyline")}
         if paths:
             pts = [p for path in paths.values() for p in path]
-            fmap = folium.Map(tiles="cartodbpositron")
+            fmap = folium.Map(tiles="OpenStreetMap")
             for o in avail:
                 if o["mode"] in paths:
                     is_best = best and o["mode"] == best["mode"]
